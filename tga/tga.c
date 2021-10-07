@@ -139,7 +139,7 @@ void reverse_horizontally(TGAImage img) {
             *lptr = *rptr;
             *rptr = temp;
         }
-    } 
+    }
 }
 
 void reverse_verticaly(TGAImage img) {

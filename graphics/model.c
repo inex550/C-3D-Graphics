@@ -19,14 +19,18 @@ Model* read_obj_model(char *filename) {
     char *ptr, *endptr;
 
     Array *vects_arr = array_create(sizeof(Vect3f));
+    Array *vtextures_arr = array_create(sizeof(Vect3f));
+    Array *vnormals_arr = array_create(sizeof(Vect3f));
     Array *faces_arr = array_create(sizeof(Face));
 
     while (fread(type, 2, 1, fptr)) {
         memset(buf, 0, LINE_BUF_LEN);
 
-        if (type[0]=='v'&&type[1]==' ') {
+        if (type[0]=='v') {
             ptr = buf;
             while ((*ptr++ = fgetc(fptr)) != '\n');
+
+            if (type[1] != ' ') fgetc(fptr);
 
             Vect3f vect;
 
@@ -34,7 +38,17 @@ Model* read_obj_model(char *filename) {
             vect.y = strtof(endptr, &endptr);
             vect.z = strtof(endptr, NULL);
 
-            array_add(vects_arr, &vect);
+            switch(type[1]) {
+                case ' ':
+                    array_add(vects_arr, &vect);
+                    break;
+                case 't':
+                    array_add(vtextures_arr, &vect);
+                    break;
+                case 'n':
+                    array_add(vnormals_arr, &vect);
+                    break;
+            }
         } else if (*type == 'f') {
             ptr = buf;
             while ((*ptr++ = fgetc(fptr)) != '\n');
@@ -67,11 +81,25 @@ Model* read_obj_model(char *filename) {
     model->nfaces = faces_arr->len;
 
     model->vects = (Vect3f*)vects_arr->ptr;
-    model->nvects = vects_arr->len;
+    model->vtextures = (Vect3f*)vtextures_arr->ptr;
+    model->vnormals = (Vect3f*)vnormals_arr->ptr;
 
-    free(faces_arr);
+    model->nvects = vects_arr->len;
+    model->nvtextures = vtextures_arr->len;
+    model->nvnormals = vnormals_arr->len;
+
     free(vects_arr);
+    free(vtextures_arr);
+    free(vnormals_arr);
+    free(faces_arr);
 
     return model;
 }
 
+void model_free(Model *model) {
+    free(model->vects);
+    free(model->vtextures);
+    free(model->vnormals);
+    free(model->faces);
+    free(model);
+}

@@ -1,1 +1,1 @@
-gcc main.c tga/* model/* inex/* -o prog.exe
+gcc main.c tga/* graphics/* inex/* -o prog.exe
