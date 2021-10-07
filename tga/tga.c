@@ -74,7 +74,7 @@ TGAImage* read_tga_file(char *filename) {
     unsigned long nbytes = header.img_width*header.img_height*tga_img->cblen;
     tga_img->data = malloc(nbytes);
 
-    fgets(tga_img->data, nbytes, tga_file);
+    fread(tga_img->data, 1, nbytes, tga_file);
 
     fclose(tga_file);
 

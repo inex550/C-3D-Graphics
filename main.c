@@ -43,8 +43,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int width = 3000;
-    int height = 3000;
+    int width = 2000;
+    int height = 2000;
 
     char *filename = argv[1];
 
@@ -58,7 +58,8 @@ int main(int argc, char *argv[]) {
     int *zbuffer = malloc(nbytes);
     memset(zbuffer, CHAR_MIN, nbytes);
 
-    draw_model_faces(img, filename, (Vect3f){0, 0, -1}, 300, zbuffer);
+    draw_model_faces(img, filename, (Vect3f){0.2, 0.2, -1}, 300, zbuffer);
+    //draw_model_edges(img, filename, white);
 
     write_tga_file(OUT_TGA, img);
     tga_free(img);
